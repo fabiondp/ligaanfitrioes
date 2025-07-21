@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Liga dos Anfitriões</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        /* Variáveis CSS para cores */
+        :root {
+            --primary-color: #004aad;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa; /* bg-light */
+            --white-color: #ffffff; /* bg-white */
+            --whatsapp-color: #25d366; /* Cor oficial do WhatsApp */
+        }
+
+        /* Espaçamento entre seções */
+        section {
+            padding: 5rem 0; /* Aumenta o espaçamento vertical padrão para todas as seções */
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 85vh; /* Aumenta a altura da hero para dar mais impacto */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white-color);
+            text-align: center;
+            
+            /* Degradê com sua cor primaria (#004aad) e imagem de fundo */
+            background-image: linear-gradient(to right, rgba(0, 74, 173, 0.85), rgba(0, 100, 200, 0.85)),
+                              url('https://source.unsplash.com/random/1920x1080/?blue,flat,abstract,minimal'); 
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Efeito Parallax */
+        }
+        
+        /* Ajuste para hero em dispositivos móveis */
+        @media (max-width: 767.98px) {
+            .hero {
+                min-height: 70vh; /* Altura um pouco menor em mobile */
+                background-attachment: scroll; /* Desabilita parallax em mobile */
+            }
+            .hero h1 {
+                font-size: 2.5rem; /* Reduz tamanho do título em mobile */
+            }
+        }
+
+        /* Botão Personalizado */
+        .btn-custom-dark {
+            background-color: var(--dark-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .btn-custom-dark:hover {
+            background-color: #495057;
+            transform: translateY(-2px);
+            color: var(--white-color);
+        }
+        .btn-custom-dark:active {
+            background-color: #212529;
+            transform: translateY(0);
+        }
+
+        /* Botão WhatsApp */
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .btn-whatsapp i {
+            font-size: 1.5em; /* Aumenta o tamanho do ícone */
+            margin-right: 0.5rem;
+        }
+        .btn-whatsapp:hover {
+            background-color: #20b056; /* Um verde um pouco mais escuro */
+            transform: translateY(-2px);
+            color: var(--white-color);
+        }
+        .btn-whatsapp:active {
+            background-color: #1a8f46;
+            transform: translateY(0);
+        }
+
+
+        /* Navbar */
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,.05); /* Sombra suave para a navbar */
+        }
+        .navbar-brand img {
+            margin-right: 0.5rem;
+        }
+
+        /* Cards de Serviços */
+        .card-hover-pulse:hover {
+            animation: pulse 1s infinite;
+        }
+        .card-icon {
+            font-size: 4.5rem; /* Ícones um pouco maiores */
+            color: var(--primary-color); /* Usando a cor primária para os ícones */
+            margin-bottom: 1.5rem; /* Mais espaçamento */
+        }
+        .card {
+            border-radius: 1rem; /* Mais arredondamento para os cards */
+            transition: transform 0.3s ease; /* Transição para o card no hover */
+            border: 1px solid rgba(0, 0, 0, 0.08); /* Borda mais sutil */
+        }
+        .card:hover {
+            transform: translateY(-5px); /* Leve levantamento no hover */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important; /* Sombra mais pronunciada */
+        }
+
+        /* Estilos para a seção de especialistas */
+        .expert-card {
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 1rem; /* Mais arredondamento */
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            background-color: var(--white-color); /* Fundo branco para cards de especialista */
+            transition: transform 0.3s ease;
+        }
+        .expert-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .expert-img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 0.75rem;
+        }
+        @media (min-width: 992px) {
+            .expert-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 2rem; /* Mais espaço entre imagem e texto */
+            }
+            .expert-img-container {
+                flex-shrink: 0;
+                width: 200px; /* Reduz um pouco o tamanho da imagem para melhor proporção */
+                height: 200px;
+                border-radius: 50%; /* Faz a imagem redonda */
+                overflow: hidden; /* Garante que a imagem seja cortada em círculo */
+                box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* Sombra na imagem */
+            }
+            .expert-img {
+                width: 100%;
+                height: 100%;
+                border-radius: 0; /* Remove border-radius individual da imagem, agora é no container */
+            }
+        }
+        @media (max-width: 991.98px) {
+            .expert-img {
+                margin-bottom: 1.5rem;
+                max-height: 180px;
+                width: 180px; /* Tamanho fixo para mobile para manter a circularidade */
+                display: block; /* Para centralizar com margin auto */
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        /* Seção de Testemunhos */
+        .carousel-item {
+            padding: 2rem 0; /* Espaçamento interno */
+        }
+        .blockquote p {
+            font-size: 1.5rem !important; /* Aumenta um pouco o texto do testemunho */
+            line-height: 1.6;
+        }
+        /* Estilos para os indicadores do carrossel */
+        .carousel-indicators {
+            position: absolute;
+            right: 0;
+            bottom: 20px; /* Posição mais acima dos controles padrão */
+            left: 0;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin-right: 15%; /* Ajuste de margem para centralizar melhor */
+            margin-left: 15%;
+            list-style: none;
+        }
+
+        .carousel-indicators [data-bs-target] {
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 12px; /* Tamanho dos círculos */
+            height: 12px; /* Tamanho dos círculos */
+            padding: 0;
+            margin-right: 8px; /* Espaçamento entre os círculos */
+            margin-left: 8px;
+            text-indent: -999px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.2); /* Cor dos círculos inativos */
+            background-clip: padding-box;
+            border: 0;
+            border-radius: 50%; /* Faz os indicadores circulares */
+            opacity: .7; /* Opacidade dos inativos */
+            transition: all .3s ease; /* Transição para o hover e active */
+        }
+
+        .carousel-indicators .active {
+            opacity: 1; /* Cor do círculo ativo */
+            background-color: var(--primary-color); /* Usando sua cor primária */
+            transform: scale(1.3); /* Leve aumento no círculo ativo */
+        }
+        
+        .carousel-indicators [data-bs-target]:hover {
+            opacity: 0.9;
+            background-color: var(--primary-color); /* Indicador hover fica da cor primária */
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            display: none; /* Esconde as setas de controle */
+        }
+
+        /* Seção de Contato */
+        #contato .form-control {
+            border-radius: 0.5rem; /* Campos de formulário mais arredondados */
+            padding: 0.75rem 1rem;
+        }
+        #contato .btn-primary { /* Mantido para compatibilidade, mas o estilo é do btn-custom-dark */
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 50px; /* Botão de enviar no estilo pílula */
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        #contato .btn-primary:hover {
+            background-color: darken(var(--primary-color), 10%); /* Escurece um pouco no hover */
+            border-color: darken(var(--primary-color), 10%);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: var(--white-color);
+            padding: 3rem 0;
+        }
+        .footer a {
+            color: var(--primary-color); /* Links do footer com a cor primária */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--white-color);
+        }
+
+        /* Animação de Scroll Reveal (Opacidade inicial 0) */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px); /* Começa ligeiramente abaixo */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Transição suave */
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top py-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#">
+            <img src="https://picsum.photos/40/40?random=logo" alt="Liga dos Anfitriões Logo" class="d-inline-block align-text-top rounded-circle">
+            Liga dos Anfitriões
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Início</a></li>
+                <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+                <!-- <!-- <li class="nav-item"><a class="nav-link" href="#especialistas">Especialistas</a></li> -->
+                <!-- <li class="nav-item"><a class="nav-link" href="#testemunhos">Depoimentos</a></li> -->
+				<li class="nav-item"><a class="nav-link" href="#whatsapp-grupo">Contato</a></li>
+				<li class="nav-item"><a class="nav-link" href="Anuncios.html#anuncios">Anúncios</a></li> 
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="hero" id="home">
+    <div class="container animate__animated animate__fadeIn">
+        <h1 class="display-4 fw-bold mb-4">Faça parte de um grupo de anfitriões engajado</h1>
+        <p class="lead mb-5">Junte-se a nós e expanda suas possibilidades! Transforme sua experiência de hospedagem.</p>
+        <a href="#servicos" class="btn btn-custom-dark animate__animated animate__pulse animate__infinite animate__delay-2s">Quero saber mais</a>
+    </div>
+</section>
+
+<section class="bg-white" id="servicos">
+    <div class="container animate-on-scroll">
+        <h2 class="text-center mb-5 display-5 fw-bold">O que oferecemos?</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm card-hover-pulse">
+                    <div class="card-body d-flex flex-column align-items-start p-4 text-center">
+                        <i class='bx bx-book-open card-icon mx-auto'></i>
+                        <h5 class="card-title fw-semibold text-center w-100">Conhecimento Especializado</h5>
+                        <p class="card-text text-center w-100">Acesso à expertise de uma Superhost com 10 trimestres consecutivos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm card-hover-pulse">
+                    <div class="card-body d-flex flex-column align-items-start p-4 text-center">
+                        <i class='bx bx-group card-icon mx-auto'></i>
+                        <h5 class="card-title fw-semibold text-center w-100">Comunidade Ativa</h5>
+                        <p class="card-text text-center w-100">Rede de anfitriões experientes para troca de experiências.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm card-hover-pulse">
+                    <div class="card-body d-flex flex-column align-items-start p-4 text-center">
+                        <i class='bx bx-support card-icon mx-auto'></i>
+                        <h5 class="card-title fw-semibold text-center w-100">Suporte Contínuo</h5>
+                        <p class="card-text text-center w-100">Acompanhamento e mentoria para superar desafios.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm card-hover-pulse">
+                    <div class="card-body d-flex flex-column align-items-start p-4 text-center">
+                        <i class='bx bx-award card-icon mx-auto'></i>
+                        <h5 class="card-title fw-semibold text-center w-100">Resultados Comprovados</h5>
+                        <p class="card-text text-center w-100">Estratégias testadas e aprovadas por anfitriões de sucesso.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light" id="especialistas">
+    <div class="container animate-on-scroll">
+        <h2 class="text-center mb-5 display-5 fw-bold">Quem são nossos principais especialistas?</h2>
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="p-4 expert-card h-100">
+                    <div class="expert-content">
+                        <div class="expert-img-container text-center text-lg-start">
+                            <img src="https://picsum.photos/300/300?random=5" class="expert-img" alt="Foto da Especialista Maria Silva">
+                        </div>
+                        <div>
+                            <h4 class="mt-3 mt-lg-0 mb-2 fw-semibold">Maria Silva</h4>
+                            <p class="text-muted mb-3 fs-5">Fundadora e Superhost Platinum</p>
+                            <p>Com mais de 10 anos de experiência no mercado de hospedagem, Maria é reconhecida por sua capacidade de otimizar anúncios e maximizar a rentabilidade de propriedades. Ela é pioneira em estratégias de engajamento com hóspedes e tem um histórico comprovado de alta satisfação.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="p-4 expert-card h-100">
+                    <div class="expert-content">
+                        <div class="expert-img-container text-center text-lg-start">
+                            <img src="https://picsum.photos/300/300?random=6" class="expert-img" alt="Foto do Especialista João Pereira">
+                        </div>
+                        <div>
+                            <h4 class="mt-3 mt-lg-0 mb-2 fw-semibold">João Pereira</h4>
+                            <p class="text-muted mb-3 fs-5">Especialista em Marketing Digital para Aluguéis</p>
+                            <p>João é um mestre em visibilidade online. Ele desenvolve e implementa estratégias de marketing digital que colocam as propriedades dos nossos anfitriões no topo das buscas. Sua expertise em SEO e mídias sociais garante que seu imóvel alcance o público certo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-white" id="testemunhos">
+    <div class="container animate-on-scroll">
+        <h2 class="text-center mb-5 display-5 fw-bold">O que dizem nossos alunos</h2>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="text-center">
+                        <img src="https://picsum.photos/300/300?random=7" class="rounded-circle mb-4" width="100" height="100" alt="Aya Nakamura">
+                        <blockquote class="blockquote px-lg-5">
+                            <p class="fs-4">"A qualidade do material é excepcional e a atenção aos detalhes é impressionante. Com certeza voltarei para mais!"</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            Aya Nakamura
+                        </figcaption>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="text-center">
+                        <img src="https://picsum.photos/300/300?random=8" class="rounded-circle mb-4" width="100" height="100" alt="João Silva">
+                        <blockquote class="blockquote px-lg-5">
+                            <p class="fs-4">"Aprendi muito rápido e adorei as dicas práticas. Recomendo a todos os anfitriões que querem se destacar!"</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            João Silva
+                        </figcaption>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="text-center">
+                        <img src="https://picsum.photos/300/300?random=9" class="rounded-circle mb-4" width="100" height="100" alt="Maria Souza">
+                        <blockquote class="blockquote px-lg-5">
+                            <p class="fs-4">"A melhor experiência de aprendizado que já tive. A comunidade é maravilhosa e o suporte é incrível!"</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            Maria Souza
+                        </figcaption>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light text-center" id="whatsapp-grupo">
+    <div class="container animate-on-scroll">
+        <h2 class="mb-4 display-5 fw-bold">Quer ir além? Participe do nosso Grupo Gratuito!</h2>
+        <p class="lead mb-5">
+            Junte-se à nossa comunidade no WhatsApp para dicas exclusivas, networking com outros anfitriões e acesso a <strong>aulas abertas gratuitas</strong> de mentoria.
+            É a sua chance de tirar dúvidas em tempo real e aprender com os melhores!
+        </p>
+        <a href="https://chat.whatsapp.com/SEULINKDOOGRUPO" target="_blank" class="btn btn-whatsapp animate__animated animate__pulse animate__infinite">
+            <i class='bx bxl-whatsapp'></i> Entrar no Grupo VIP do WhatsApp
+        </a>
+        <p class="mt-3 text-muted">Vagas limitadas!</p>
+    </div>
+</section>
+
+
+<!-- <section class="bg-white" id="contato"> -->
+    <!-- <div class="container animate-on-scroll"> -->
+        <!-- <h2 class="text-center mb-5 display-5 fw-bold">Entre em Contato</h2> -->
+        <!-- <p class="text-center lead mb-5">Preencha o formulário abaixo e entraremos em contato o mais breve possível para tirar suas dúvidas e te ajudar a alcançar o sucesso!</p> -->
+        <!-- <div class="row justify-content-center"> -->
+            <!-- <div class="col-lg-8 col-md-10"> -->
+                <!-- <form> -->
+                    <!-- <div class="row g-4"> -->
+                        <!-- <div class="col-md-6"> -->
+                            <!-- <input type="text" class="form-control" placeholder="Seu Nome Completo" aria-label="Nome"> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-md-6"> -->
+                            <!-- <input type="email" class="form-control" placeholder="Seu Melhor E-mail" aria-label="Email"> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-12"> -->
+                            <!-- <input type="tel" class="form-control" placeholder="Seu Telefone (com DDD)" aria-label="Telefone"> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-12"> -->
+                            <!-- <textarea class="form-control" rows="5" placeholder="Sua Mensagem / Dúvida" aria-label="Mensagem"></textarea> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-12 text-center"> -->
+                            <!-- <button type="submit" class="btn btn-primary btn-custom-dark">Enviar Mensagem</button> -->
+                        <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </form> -->
+            <!-- </div> -->
+        <!-- </div> -->
+    <!-- </div> -->
+<!-- </section> -->
+
+<footer class="footer text-center">
+    <div class="container">
+        <p class="mb-2">&copy; 2030 Liga dos Anfitriões. Todos os direitos reservados.</p>
+        <div class="mt-3">
+            <a href="#" class="me-3"><i class='bx bxl-facebook-circle'></i> Facebook</a>
+            <a href="#" class="me-3"><i class='bx bxl-instagram-alt'></i> Instagram</a>
+            <a href="#"><i class='bx bxl-twitter'></i> Twitter</a>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // JavaScript para animação ao scroll (Intersection Observer API)
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('.animate-on-scroll');
+
+        const observerOptions = {
+            root: null, // Observa o viewport
+            rootMargin: '0px',
+            threshold: 0.2 // Elemento visível em 20% para acionar a animação
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible', 'animate__animated', 'animate__fadeInUp');
+                    observer.unobserve(entry.target); // Para animar apenas uma vez
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Adicionar animação para o botão da hero quando ele aparece
+        const heroButton = document.querySelector('.hero .btn-custom-dark');
+        if (heroButton) {
+            heroButton.classList.add('animate__animated', 'animate__pulse', 'animate__infinite', 'animate__delay-2s');
+        }
+
+        // Suavizar o scroll para as âncoras da navbar
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>
