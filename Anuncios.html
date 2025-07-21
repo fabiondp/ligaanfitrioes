@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anúncios dos Membros - Liga dos Anfitriões</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        /* Variáveis CSS para cores */
+        :root {
+            --primary-color: #004aad;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa; /* bg-light */
+            --white-color: #ffffff; /* bg-white */
+            --whatsapp-color: #25d366; /* Cor oficial do WhatsApp */
+        }
+
+        /* Espaçamento entre seções */
+        section {
+            padding: 5rem 0; /* Aumenta o espaçamento vertical padrão para todas as seções */
+        }
+        
+        /* Navbar */
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,.05); /* Sombra suave para a navbar */
+        }
+        .navbar-brand img {
+            margin-right: 0.5rem;
+        }
+
+        /* Botão Personalizado - Dark */
+        .btn-custom-dark {
+            background-color: var(--dark-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .btn-custom-dark:hover {
+            background-color: #495057;
+            transform: translateY(-2px);
+            color: var(--white-color);
+        }
+        .btn-custom-dark:active {
+            background-color: #212529;
+            transform: translateY(0);
+        }
+
+        /* Botão WhatsApp */
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .btn-whatsapp i {
+            font-size: 1.5em; /* Aumenta o tamanho do ícone */
+            margin-right: 0.5rem;
+        }
+        .btn-whatsapp:hover {
+            background-color: #20b056; /* Um verde um pouco mais escuro */
+            transform: translateY(-2px);
+            color: var(--white-color);
+        }
+        .btn-whatsapp:active {
+            background-color: #1a8f46;
+            transform: translateY(0);
+        }
+
+        /* Cards de Anúncios */
+        .listing-card {
+            border-radius: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden; /* Garante que as bordas arredondadas do card cortem o carrossel */
+            position: relative;
+        }
+        .listing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .listing-img-carousel {
+            height: 250px; /* Altura fixa para as imagens do carrossel */
+            background-color: #e9ecef; /* Placeholder para imagens não carregadas */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 1.25rem;
+        }
+        .listing-img-carousel .carousel-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+        .listing-img-carousel .carousel-control-prev,
+        .listing-img-carousel .carousel-control-next {
+            width: 15%; /* Área de clique menor para as setas */
+            opacity: 0; /* Esconde as setas por padrão */
+            transition: opacity 0.3s ease;
+        }
+        .listing-card:hover .listing-img-carousel .carousel-control-prev,
+        .listing-card:hover .listing-img-carousel .carousel-control-next {
+            opacity: 1; /* Mostra as setas no hover do card */
+        }
+        .listing-img-carousel .carousel-control-prev-icon,
+        .listing-img-carousel .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro para as setas */
+            border-radius: 50%; /* Setas redondas */
+            padding: 10px;
+        }
+
+        .listing-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            background-color: rgba(0, 74, 173, 0.9); /* Cor primária com transparência */
+            color: white;
+            padding: .3em .7em;
+            border-radius: .5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .listing-badge-instant {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            background-color: rgba(52, 58, 64, 0.9); /* Dark color with transparency */
+            color: white;
+            padding: .3em .7em;
+            border-radius: .5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .listing-info {
+            padding: 1.5rem;
+        }
+        .listing-location {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        .listing-rating {
+            font-size: 1rem;
+            color: var(--dark-color);
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .listing-rating i {
+            color: gold;
+            margin-right: 0.3rem;
+        }
+        .listing-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .listing-price small {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 400;
+        }
+        .listing-details span {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1rem;
+            color: #495057;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .listing-details span i {
+            margin-right: 0.4rem;
+            color: var(--primary-color);
+        }
+        .listing-amenities {
+            border-top: 1px solid #e9ecef;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        .listing-amenities span {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+            color: #495057;
+            font-size: 0.85rem;
+            white-space: nowrap; /* Evita quebras de linha para ícones e texto */
+        }
+        .listing-amenities span i {
+            margin-right: 0.4rem;
+            color: var(--dark-color);
+        }
+
+        .btn-view-airbnb {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        .btn-view-airbnb:hover {
+            background-color: #003a8d; /* Escurece um pouco */
+            transform: translateY(-2px);
+            color: var(--white-color);
+        }
+        .btn-view-airbnb:active {
+            background-color: #002a6c;
+            transform: translateY(0);
+        }
+
+        /* Contador */
+        .counter-section {
+            padding: 1rem 0;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .counter-number {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .counter-label {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Filtro de Cidades */
+        /* Wrapper para esconder a barra de rolagem */
+        .city-filter-container {
+            overflow-x: hidden; /* Esconde a barra de rolagem do contêiner externo */
+            /* margin-bottom: 3rem; */
+        }
+
+        .city-filter {
+            display: flex; /* Mantém os itens na mesma linha */
+            flex-wrap: wrap; /* Impede que os itens quebrem linha */
+            /*overflow-x: scroll; Adiciona scroll horizontal ao elemento interno */
+            -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
+            padding-bottom: 10px; /* Espaço para a barra de scroll (que será escondida pelo container) */
+            /* Removido justify-content-center para permitir o scroll iniciar da esquerda quando houver overflow */
+            
+            /* Esconder a barra de rolagem para diferentes navegadores */
+            &::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+		
+		.city-filter .form-check {
+    padding: 0.3em;
+}
+
+        .city-filter .form-check-inline {
+            margin-right: 1rem; /* Espaçamento entre os radios */
+            cursor: pointer;
+            flex-shrink: 0; /* Impede que os itens encolham e garante o scroll */
+        }
+
+        .city-filter .form-check-input {
+            display: none; /* Esconde o radio button padrão */
+        }
+
+        .city-filter .form-check-label {
+            display: inline-block;
+            background-color: #e9ecef; /* Cor de fundo padrão */
+            color: #495057; /* Cor do texto padrão */
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px; /* Arredondado */
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 500;
+            border: 1px solid #dee2e6;
+            white-space: nowrap; /* Impede quebras de linha no label */
+        }
+
+        .city-filter .form-check-input:checked + .form-check-label {
+            background-color: var(--primary-color); /* Cor primária quando selecionado */
+            color: var(--white-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 74, 173, 0.3);
+        }
+
+        .city-filter .form-check-label:hover {
+            background-color: #d8dee3; /* Levemente mais escuro no hover */
+            color: #212529;
+            border-color: #ced4da;
+        }
+
+
+        /* Seção de Contato */
+        #contato .form-control {
+            border-radius: 0.5rem; /* Campos de formulário mais arredondados */
+            padding: 0.75rem 1rem;
+        }
+        #contato .btn-primary { /* Mantido para compatibilidade, mas o estilo é do btn-custom-dark */
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 50px; /* Botão de enviar no estilo pílula */
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        #contato .btn-primary:hover {
+            background-color: #003a8d; /* Escurece um pouco no hover */
+            border-color: #003a8d;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: var(--white-color);
+            padding: 3rem 0;
+        }
+        .footer a {
+            color: var(--primary-color); /* Links do footer com a cor primária */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--white-color);
+        }
+
+        /* Animação de Scroll Reveal (Opacidade inicial 0) */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px); /* Começa ligeiramente abaixo */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Transição suave */
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top py-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="LigaAnfitrioes.html">
+            <img src="https://picsum.photos/40/40?random=logo" alt="Liga dos Anfitriões Logo" class="d-inline-block align-text-top rounded-circle">
+            Liga dos Anfitriões
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="LigaAnfitrioes.html#home">Início</a></li>
+                <li class="nav-item"><a class="nav-link" href="LigaAnfitrioes.html#servicos">Serviços</a></li>
+				<li class="nav-item"><a class="nav-link" href="LigaAnfitrioes.html#whatsapp-grupo">Contato</a></li>
+                <li class="nav-item"><a class="nav-link" href="#anuncios">Anúncios</a></li> 
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="bg-light pt-5" id="anuncios">
+    <div class="container animate-on-scroll pt-5">
+        <h1 class="text-center mb-4 display-5 fw-bold">Anúncios dos Membros</h1>
+        <p class="text-center lead mb-5">Descubra acomodações excepcionais oferecidas pelos nossos membros especialistas. Cada anúncio representa a qualidade e o cuidado que caracterizam a Liga dos Anfitriões.</p>
+
+        <div class="row justify-content-center mb-2">
+            <div class="col-lg-8">
+                <div class="counter-section">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="counter-number" id="anunciosCount">1</div>
+                            <div class="counter-label">Anúncios Disponíveis</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="counter-number" id="membrosCount">71</div>
+                            <div class="counter-label">Membros Ativos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3 animate-on-scroll">
+            <div class="col-12">
+                <!-- <h4 class="text-center mb-3 fw-bold">Filtrar por Cidade:</h4> -->
+<div class="city-filter-container">
+    <div class="city-filter">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityAll" value="all" checked>
+            <label class="form-check-label" for="cityAll">Todos</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityRJ" value="Rio de Janeiro, RJ">
+            <label class="form-check-label" for="cityRJ">Rio de Janeiro, RJ</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityRS" value="Gramado, RS">
+            <label class="form-check-label" for="cityRS">Gramado, RS</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="citySP" value="São Paulo, SP">
+            <label class="form-check-label" for="citySP">São Paulo, SP</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="citySC" value="Florianópolis, SC">
+            <label class="form-check-label" for="citySC">Florianópolis, SC</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityCampos" value="Campos do Jordão, SP">
+            <label class="form-check-label" for="cityCampos">Campos do Jordão, SP</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityPetropolis" value="Petrópolis, RJ">
+            <label class="form-check-label" for="cityPetropolis">Petrópolis, RJ</label>
+        </div>
+		<div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityPetropolis" value="Petrópolis, RJ">
+            <label class="form-check-label" for="cityPetropolis">Recife</label>
+        </div>
+		<div class="form-check">
+            <input class="form-check-input" type="radio" name="cityFilter" id="cityPetropolis" value="Petrópolis, RJ">
+            <label class="form-check-label" for="cityPetropolis">Salvador</label>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="listingsContainer">
+            <div class="col listing-item" data-city="Rio de Janeiro, RJ">
+                <div class="card listing-card h-100 shadow-sm">
+                    <span class="listing-badge">Superhost</span>
+                    <span class="listing-badge-instant">Instantâneo</span>
+                    <div id="carouselListing1" class="carousel slide listing-img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://source.unsplash.com/random/800x600/?house,modern,livingroom" class="d-block w-100" alt="Imagem do Anúncio 1 - Quarto">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?house,modern,kitchen" class="d-block w-100" alt="Imagem do Anúncio 1 - Cozinha">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?house,modern,bathroom" class="d-block w-100" alt="Imagem do Anúncio 1 - Banheiro">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselListing1" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselListing1" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                    <div class="card-body listing-info">
+                        <p class="listing-location"><i class='bx bx-map'></i> Rio de Janeiro, RJ</p>
+                        <p class="listing-rating"><i class='bx bxs-star'></i> 4.9 <span class="text-muted">(127)</span></p>
+                        <h5 class="listing-price">R$ 180<small>/noite</small></h5>
+                        <div class="listing-details mb-3">
+                            <span><i class='bx bx-bed'></i> 4 hóspedes</span>
+                            <span><i class='bx bx-hotel'></i> 2 quartos</span>
+                            <span><i class='bx bx-bath'></i> 1 banheiros</span>
+                        </div>
+                        <div class="listing-amenities">
+                            <span><i class='bx bx-wifi'></i> wifi</span>
+                            <span><i class='bx bx-wind'></i> ar condicionado</span>
+                            <span><i class='bx bx-tv'></i> tv</span>
+                            <span><i class='bx bx-dish'></i> cozinha</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" target="_blank" class="btn btn-view-airbnb">Ver no Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col listing-item" data-city="Gramado, RS">
+                <div class="card listing-card h-100 shadow-sm">
+                    <span class="listing-badge">Superhost</span>
+                    <div id="carouselListing2" class="carousel slide listing-img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://source.unsplash.com/random/800x600/?house,kitchen,modern" class="d-block w-100" alt="Imagem do Anúncio 2 - Cozinha">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?house,exterior,garden" class="d-block w-100" alt="Imagem do Anúncio 2 - Exterior">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?house,pool" class="d-block w-100" alt="Imagem do Anúncio 2 - Piscina">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselListing2" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselListing2" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                    <div class="card-body listing-info">
+                        <p class="listing-location"><i class='bx bx-map'></i> Gramado, RS</p>
+                        <p class="listing-rating"><i class='bx bxs-star'></i> 4.8 <span class="text-muted">(90)</span></p>
+                        <h5 class="listing-price">R$ 325<small>/noite</small></h5>
+                        <div class="listing-details mb-3">
+                            <span><i class='bx bx-bed'></i> 8 hóspedes</span>
+                            <span><i class='bx bx-hotel'></i> 4 quartos</span>
+                            <span><i class='bx bx-bath'></i> 3 banheiros</span>
+                        </div>
+                        <div class="listing-amenities">
+                            <span><i class='bx bx-wifi'></i> wifi</span>
+                            <span><i class='bx bx-water'></i> piscina</span>
+                            <span><i class='bx bx-restaurant'></i> churrasqueira</span>
+                            <span><i class='bx bx-car'></i> estacionamento</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" target="_blank" class="btn btn-view-airbnb">Ver no Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col listing-item" data-city="São Paulo, SP">
+                <div class="card listing-card h-100 shadow-sm">
+                    <span class="listing-badge-instant">Instantâneo</span>
+                    <div id="carouselListing3" class="carousel slide listing-img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://source.unsplash.com/random/800x600/?apartment,city,bedroom" class="d-block w-100" alt="Imagem do Anúncio 3 - Apartamento na Cidade">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?apartment,city,view" class="d-block w-100" alt="Imagem do Anúncio 3 - Vista da Cidade">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?apartment,gym" class="d-block w-100" alt="Imagem do Anúncio 3 - Academia">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselListing3" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselListing3" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                    <div class="card-body listing-info">
+                        <p class="listing-location"><i class='bx bx-map'></i> São Paulo, SP</p>
+                        <p class="listing-rating"><i class='bx bxs-star'></i> 4.7 <span class="text-muted">(158)</span></p>
+                        <h5 class="listing-price">R$ 260<small>/noite</small></h5>
+                        <div class="listing-details mb-3">
+                            <span><i class='bx bx-bed'></i> 2 hóspedes</span>
+                            <span><i class='bx bx-hotel'></i> 1 quartos</span>
+                            <span><i class='bx bx-bath'></i> 1 banheiros</span>
+                        </div>
+                        <div class="listing-amenities">
+                            <span><i class='bx bx-wifi'></i> wifi</span>
+                            <span><i class='bx bx-wind'></i> ar condicionado</span>
+                            <span><i class='bx bx-tv'></i> tv</span>
+                            <span><i class='bx bx-dumbbell'></i> academia</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" target="_blank" class="btn btn-view-airbnb">Ver no Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col listing-item" data-city="Florianópolis, SC">
+                <div class="card listing-card h-100 shadow-sm">
+                    <span class="listing-badge">Superhost</span>
+                    <div id="carouselListing4" class="carousel slide listing-img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://source.unsplash.com/random/800x600/?beach,house,sunset" class="d-block w-100" alt="Imagem do Anúncio 4 - Casa de Praia">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?beach,terrace" class="d-block w-100" alt="Imagem do Anúncio 4 - Terraço">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?beach,kitchen" class="d-block w-100" alt="Imagem do Anúncio 4 - Cozinha">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselListing4" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselListing4" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                    <div class="card-body listing-info">
+                        <p class="listing-location"><i class='bx bx-map'></i> Florianópolis, SC</p>
+                        <p class="listing-rating"><i class='bx bxs-star'></i> 4.9 <span class="text-muted">(210)</span></p>
+                        <h5 class="listing-price">R$ 290<small>/noite</small></h5>
+                        <div class="listing-details mb-3">
+                            <span><i class='bx bx-bed'></i> 6 hóspedes</span>
+                            <span><i class='bx bx-hotel'></i> 3 quartos</span>
+                            <span><i class='bx bx-bath'></i> 2 banheiros</span>
+                        </div>
+                        <div class="listing-amenities">
+                            <span><i class='bx bx-wifi'></i> wifi</span>
+                            <span><i class='bx bx-wind'></i> ar condicionado</span>
+                            <span><i class='bx bx-tv'></i> tv</span>
+                            <span><i class='bx bx-car'></i> estacionamento</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" target="_blank" class="btn btn-view-airbnb">Ver no Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col listing-item" data-city="Campos do Jordão, SP">
+                <div class="card listing-card h-100 shadow-sm">
+                    <span class="listing-badge-instant">Instantâneo</span>
+                    <div id="carouselListing5" class="carousel slide listing-img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://source.unsplash.com/random/800x600/?mountain,cabin,winter" class="d-block w-100" alt="Imagem do Anúncio 5 - Cabana na Montanha">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?mountain,fireplace" class="d-block w-100" alt="Imagem do Anúncio 5 - Lareira">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?mountain,forest" class="d-block w-100" alt="Imagem do Anúncio 5 - Vista da Floresta">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselListing5" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselListing5" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                    <div class="card-body listing-info">
+                        <p class="listing-location"><i class='bx bx-map'></i> Campos do Jordão, SP</p>
+                        <p class="listing-rating"><i class='bx bxs-star'></i> 4.8 <span class="text-muted">(85)</span></p>
+                        <h5 class="listing-price">R$ 450<small>/noite</small></h5>
+                        <div class="listing-details mb-3">
+                            <span><i class='bx bx-bed'></i> 5 hóspedes</span>
+                            <span><i class='bx bx-hotel'></i> 3 quartos</span>
+                            <span><i class='bx bx-bath'></i> 2 banheiros</span>
+                        </div>
+                        <div class="listing-amenities">
+                            <span><i class='bx bx-wifi'></i> wifi</span>
+                            <span><i class='bx bx-tv'></i> tv</span>
+                            <span><i class='bx bx-wind'></i> aquecedor</span>
+                            <span><i class='bx bx-restaurant'></i> lareira</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" target="_blank" class="btn btn-view-airbnb">Ver no Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col listing-item" data-city="Petrópolis, RJ">
+                <div class="card listing-card h-100 shadow-sm">
+                    <span class="listing-badge">Superhost</span>
+                    <span class="listing-badge-instant">Instantâneo</span>
+                    <div id="carouselListing6" class="carousel slide listing-img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://source.unsplash.com/random/800x600/?farmhouse,rural,exterior" class="d-block w-100" alt="Imagem do Anúncio 6 - Casa de Campo">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?farmhouse,pool,rustic" class="d-block w-100" alt="Imagem do Anúncio 6 - Piscina Rural">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://source.unsplash.com/random/800x600/?farmhouse,bedroom,rustic" class="d-block w-100" alt="Imagem do Anúncio 6 - Quarto Rústico">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselListing6" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselListing6" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                    <div class="card-body listing-info">
+                        <p class="listing-location"><i class='bx bx-map'></i> Petrópolis, RJ</p>
+                        <p class="listing-rating"><i class='bx bxs-star'></i> 4.9 <span class="text-muted">(180)</span></p>
+                        <h5 class="listing-price">R$ 380<small>/noite</small></h5>
+                        <div class="listing-details mb-3">
+                            <span><i class='bx bx-bed'></i> 7 hóspedes</span>
+                            <span><i class='bx bx-hotel'></i> 4 quartos</span>
+                            <span><i class='bx bx-bath'></i> 3 banheiros</span>
+                        </div>
+                        <div class="listing-amenities">
+                            <span><i class='bx bx-wifi'></i> wifi</span>
+                            <span><i class='bx bx-water'></i> piscina</span>
+                            <span><i class='bx bx-restaurant'></i> churrasqueira</span>
+                            <span><i class='bx bx-car'></i> estacionamento</span>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" target="_blank" class="btn btn-view-airbnb">Ver no Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light text-center" id="whatsapp-grupo">
+    <div class="container animate-on-scroll">
+        <h2 class="mb-4 display-5 fw-bold">Quer ir além? Participe do nosso Grupo Gratuito!</h2>
+        <p class="lead mb-5">
+            Junte-se à nossa comunidade no WhatsApp para dicas exclusivas, networking com outros anfitriões e acesso a <strong>aulas abertas gratuitas</strong> de mentoria.
+            É a sua chance de tirar dúvidas em tempo real e aprender com os melhores!
+        </p>
+        <a href="https://chat.whatsapp.com/SEULINKDOOGRUPO" target="_blank" class="btn btn-whatsapp animate__animated animate__pulse animate__infinite">
+            <i class='bx bxl-whatsapp'></i> Entrar no Grupo VIP do WhatsApp
+        </a>
+        <p class="mt-3 text-muted">Vagas limitadas!</p>
+    </div>
+</section>
+
+
+<!-- <section class="bg-white" id="contato"> -->
+    <!-- <div class="container animate-on-scroll"> -->
+        <!-- <h2 class="text-center mb-5 display-5 fw-bold">Entre em Contato</h2> -->
+        <!-- <p class="text-center lead mb-5">Preencha o formulário abaixo e entraremos em contato o mais breve possível para tirar suas dúvidas e te ajudar a alcançar o sucesso!</p> -->
+        <!-- <div class="row justify-content-center"> -->
+            <!-- <div class="col-lg-8 col-md-10"> -->
+                <!-- <form> -->
+                    <!-- <div class="row g-4"> -->
+                        <!-- <div class="col-md-6"> -->
+                            <!-- <input type="text" class="form-control" placeholder="Seu Nome Completo" aria-label="Nome"> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-md-6"> -->
+                            <!-- <input type="email" class="form-control" placeholder="Seu Melhor E-mail" aria-label="Email"> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-12"> -->
+                            <!-- <input type="tel" class="form-control" placeholder="Seu Telefone (com DDD)" aria-label="Telefone"> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-12"> -->
+                            <!-- <textarea class="form-control" rows="5" placeholder="Sua Mensagem / Dúvida" aria-label="Mensagem"></textarea> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-12 text-center"> -->
+                            <!-- <button type="submit" class="btn btn-primary btn-custom-dark">Enviar Mensagem</button> -->
+                        <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </form> -->
+            <!-- </div> -->
+        <!-- </div> -->
+    <!-- </div> -->
+<!-- </section> -->
+
+<footer class="footer text-center">
+    <div class="container">
+        <p class="mb-2">&copy; 2030 Liga dos Anfitriões. Todos os direitos reservados.</p>
+        <div class="mt-3">
+            <a href="#" class="me-3"><i class='bx bxl-facebook-circle'></i> Facebook</a>
+            <a href="#" class="me-3"><i class='bx bxl-instagram-alt'></i> Instagram</a>
+            <a href="#"><i class='bx bxl-twitter'></i> Twitter</a>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('.animate-on-scroll');
+
+        const observerOptions = {
+            root: null, 
+            rootMargin: '0px',
+            threshold: 0.2 
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible', 'animate__animated', 'animate__fadeInUp');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Contador animado para "Anúncios Disponíveis"
+        const anunciosCountElement = document.getElementById('anunciosCount');
+        const targetValueAnuncios = 150;
+        const duration = 2000; 
+        const startValue = 1;
+        let startTimeAnuncios = null;
+
+        const animateCountAnuncios = (timestamp) => {
+            if (!startTimeAnuncios) startTimeAnuncios = timestamp;
+            const progress = (timestamp - startTimeAnuncios) / duration;
+
+            const currentValue = Math.min(startValue + Math.floor(progress * (targetValueAnuncios - startValue)), targetValueAnuncios);
+            anunciosCountElement.textContent = currentValue;
+
+            if (progress < 1) {
+                requestAnimationFrame(animateCountAnuncios);
+            }
+        };
+		
+		// Contador animado para "Membros Ativos"
+        const membrosCountElement = document.getElementById('membrosCount');
+        const targetValueMembros = 71;
+        let startTimeMembros = null;
+
+        const animateCountMembros = (timestamp) => {
+            if (!startTimeMembros) startTimeMembros = timestamp;
+            const progress = (timestamp - startTimeMembros) / duration;
+
+            const currentValue = Math.min(startValue + Math.floor(progress * (targetValueMembros - startValue)), targetValueMembros);
+            membrosCountElement.textContent = currentValue;
+
+            if (progress < 1) {
+                requestAnimationFrame(animateCountMembros);
+            }
+        };
+
+        const counterSection = document.querySelector('.counter-section');
+        if (counterSection) {
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        requestAnimationFrame(animateCountAnuncios);
+                        requestAnimationFrame(animateCountMembros);
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 }); 
+            counterObserver.observe(counterSection);
+        }
+
+        // Lógica de Filtragem de Anúncios por Cidade
+        const cityRadios = document.querySelectorAll('input[name="cityFilter"]');
+        const listingItems = document.querySelectorAll('.listing-item');
+
+        const filterListings = () => {
+            const selectedCity = document.querySelector('input[name="cityFilter"]:checked').value;
+            let visibleCount = 0;
+
+            listingItems.forEach(item => {
+                const itemCity = item.dataset.city;
+                if (selectedCity === 'all' || itemCity === selectedCity) {
+                    item.style.display = 'block'; // Mostra o item
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none'; // Esconde o item
+                }
+            });
+            anunciosCountElement.textContent = visibleCount; // Atualiza o contador de anúncios visíveis
+        };
+
+        // Adiciona event listeners aos radio buttons do filtro
+        cityRadios.forEach(radio => {
+            radio.addEventListener('change', filterListings);
+        });
+
+        // Chama a função de filtro ao carregar a página para definir o estado inicial
+        filterListings();
+    });
+</script>
+</body>
+</html>
